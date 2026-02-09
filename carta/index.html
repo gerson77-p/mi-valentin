@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Quieres ser mi Valentín? 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #6bc4ff 0%, #ffc3a0 100%);
+            font-family: 'Arial', sans-serif;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 30px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '💕';
+            position: absolute;
+            font-size: 100px;
+            opacity: 0.1;
+            top: -20px;
+            right: -20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        h1 {
+            color: #ff1744;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .hearts {
+            font-size: 3em;
+            margin: 20px 0;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .question {
+            font-size: 1.5em;
+            color: #333;
+            margin: 30px 0;
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #yesBtn {
+            background: linear-gradient(135deg, #ff17cd, #6be9ff);
+            color: white;
+            padding: 15px 30px;
+        }
+
+        #yesBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 23, 68, 0.4);
+        }
+
+        #noBtn {
+            background: linear-gradient(135deg, #757575, #9e9e9e);
+            color: white;
+            padding: 15px 30px;
+        }
+
+        #noBtn:hover {
+            background: linear-gradient(135deg, #616161, #757575);
+        }
+
+        .message {
+            display: none;
+            margin-top: 30px;
+            font-size: 1.3em;
+            color: #ff1744;
+            font-weight: bold;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .celebration {
+            display: none;
+            font-size: 4em;
+            margin-top: 20px;
+            animation: bounce 0.5s ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            25% { transform: translateY(-20px); }
+            50% { transform: translateY(0); }
+            75% { transform: translateY(-10px); }
+        }
+
+        .success-image {
+            display: none;
+            margin-top: 30px;
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        .success-image img {
+            max-width: 250px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .sad-image {
+            display: none;
+            margin-top: 30px;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .sad-image img {
+            max-width: 200px;
+            border-radius: 15px;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>San Valentín 💘</h1>
+        <div class="hearts">❤️ 💕 ❤️</div>
+        <p class="question">¿Quieres ser mi Valentín?</p>
+        
+        <div class="buttons">
+            <button id="yesBtn" class="btn">¡Sí! 😍</button>
+            <button id="noBtn" class="btn">No 😔</button>
+        </div>
+
+        <div class="message" id="message"></div>
+        <div class="celebration" id="celebration"></div>
+        <div class="sad-image" id="sadImage">
+            <img id="sadImageSrc" src="" alt="Butters triste">
+        </div>
+        <div class="success-image" id="successImage">
+            <img src="butters.png" alt="¡Yay!">
+        </div>
+    </div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const message = document.getElementById('message');
+        const celebration = document.getElementById('celebration');
+        const successImage = document.getElementById('successImage');
+        const sadImage = document.getElementById('sadImage');
+        const sadImageSrc = document.getElementById('sadImageSrc');
+        
+        let clickCount = 0;
+        let currentYesSize = 1;
+        
+        // Array de imágenes tristes en orden
+        const sadImages = [
+            'butters1.png',  // Enojado
+            'butters2.png',  // Sentado triste
+            'butters3.png',  // Llorando
+            'butters4.png',  // Encadenado
+            'butters5.png',  // Disfraz de oso
+            'butters6.png',  // En el baño
+            'butters7.png',  // En el urinario
+            'butters8.png',  // Rogando
+            'butters9.png',  // Gritando congelado
+            'butters10.png'  // Colgando
+        ];
+
+        noBtn.addEventListener('click', function() {
+            clickCount++;
+            currentYesSize += 0.3;
+            
+            // Hacer el botón "Sí" más grande
+            yesBtn.style.transform = `scale(${currentYesSize})`;
+            
+            // Mensajes que aparecen al presionar "No"
+            const messages = [
+                "¿Estás seguro/a? 🥺",
+                "Piénsalo bien... 💭",
+                "¿De verdad vas a decir que no? 😢",
+                "¡Vamos, di que sí! 💕",
+                "¡Mira qué grande está el Sí! 😄",
+                "Ya casi no puedes ignorarlo... 👀",
+                "¡Por favor! 🙏",
+                "¡Es tu última oportunidad! 💖",
+                "¡No me hagas esto! 😭",
+                "¡El botón Sí es inevitable! 💗"
+            ];
+            
+            if (clickCount <= messages.length) {
+                message.textContent = messages[clickCount - 1];
+                message.style.display = 'block';
+            }
+            
+            // Mostrar imagen triste correspondiente
+            if (clickCount <= sadImages.length) {
+                sadImageSrc.src = sadImages[clickCount - 1];
+                sadImage.style.display = 'block';
+                // Reiniciar animación
+                sadImage.style.animation = 'none';
+                setTimeout(() => {
+                    sadImage.style.animation = 'shake 0.5s ease-in-out';
+                }, 10);
+            }
+        });
+
+        yesBtn.addEventListener('click', function() {
+            message.textContent = '¡Sabía que dirías que sí! 💕✨';
+            message.style.display = 'block';
+            celebration.textContent = '🎉 💖 🎊 💕 🎉';
+            celebration.style.display = 'block';
+            successImage.style.display = 'block';
+            sadImage.style.display = 'none';
+            
+            // Ocultar el botón "No"
+            noBtn.style.display = 'none';
+            
+            // Restablecer el tamaño del botón "Sí"
+            yesBtn.style.transform = 'scale(1)';
+            yesBtn.textContent = '¡Sí dijiste que sí! 🥰';
+            yesBtn.disabled = true;
+            yesBtn.style.cursor = 'default';
+        });
+    </script>
+</body>
+</html>
