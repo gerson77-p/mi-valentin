@@ -189,7 +189,7 @@
             <img id="sadImageSrc" src="" alt="Butters triste">
         </div>
         <div class="success-image" id="successImage">
-            <img src="butters.png" alt="¡Yay!">
+            <img src="carta/butters.png" alt="¡Yay!">
         </div>
     </div>
 
@@ -205,28 +205,26 @@
         let clickCount = 0;
         let currentYesSize = 1;
         
-        // Array de imágenes tristes en orden
+        // AQUÍ AGREGAMOS "carta/" A CADA IMAGEN
         const sadImages = [
-            'butters1.png',  // Enojado
-            'butters2.png',  // Sentado triste
-            'butters3.png',  // Llorando
-            'butters4.png',  // Encadenado
-            'butters5.png',  // Disfraz de oso
-            'butters6.png',  // En el baño
-            'butters7.png',  // En el urinario
-            'butters8.png',  // Rogando
-            'butters9.png',  // Gritando congelado
-            'butters10.png'  // Colgando
+            'carta/butters1.png',
+            'carta/butters2.png',
+            'carta/butters3.png',
+            'carta/butters4.png',
+            'carta/butters5.png',
+            'carta/butters6.png',
+            'carta/butters7.png',
+            'carta/butters8.png',
+            'carta/butters9.png',
+            'carta/butters10.png'
         ];
 
         noBtn.addEventListener('click', function() {
             clickCount++;
             currentYesSize += 0.3;
             
-            // Hacer el botón "Sí" más grande
             yesBtn.style.transform = `scale(${currentYesSize})`;
             
-            // Mensajes que aparecen al presionar "No"
             const messages = [
                 "¿Estás seguro/a? 🥺",
                 "Piénsalo bien... 💭",
@@ -245,11 +243,9 @@
                 message.style.display = 'block';
             }
             
-            // Mostrar imagen triste correspondiente
             if (clickCount <= sadImages.length) {
                 sadImageSrc.src = sadImages[clickCount - 1];
                 sadImage.style.display = 'block';
-                // Reiniciar animación
                 sadImage.style.animation = 'none';
                 setTimeout(() => {
                     sadImage.style.animation = 'shake 0.5s ease-in-out';
@@ -265,10 +261,7 @@
             successImage.style.display = 'block';
             sadImage.style.display = 'none';
             
-            // Ocultar el botón "No"
             noBtn.style.display = 'none';
-            
-            // Restablecer el tamaño del botón "Sí"
             yesBtn.style.transform = 'scale(1)';
             yesBtn.textContent = '¡Sí dijiste que sí! 🥰';
             yesBtn.disabled = true;
